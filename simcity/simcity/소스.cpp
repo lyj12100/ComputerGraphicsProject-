@@ -4,9 +4,15 @@ void DrawScene();
 void Reshape(int, int);
 void Keyboard(unsigned char, int, int);
 
-
+//좌표변수
 float rotateX, rotateY, rotateZ = 0;
 int moveR, moveL, moveU, moveD, moveFront, moveBack = 0;
+float standardY = -200;
+
+GLUquadricObj *p = gluNewQuadric();
+
+//일반변수
+int craneMove;
 
 //객체함수
 
@@ -35,10 +41,10 @@ void BaseGround()
 	glMaterialfv(GL_FRONT, GL_SPECULAR, gray);
 
 	glBegin(GL_POLYGON);
-	glVertex3f(-500, -200, -500);
-	glVertex3f(500, -200, -500);
-	glVertex3f(500, -200, 500);
-	glVertex3f(-500, -200, 500);
+	glVertex3f(-500, standardY, -500);
+	glVertex3f(500, standardY, -500);
+	glVertex3f(500, standardY, 500);
+	glVertex3f(-500, standardY, 500);
 	glEnd();
 }
 
@@ -54,18 +60,18 @@ void Road()
 
 	for (int i = -270; i < 280; i += 270) {
 		glBegin(GL_POLYGON);
-		glVertex3f(-500, -199.9, i + 10);
-		glVertex3f(500, -199.9, i + 10);
-		glVertex3f(500, -199.9, i - 10);
-		glVertex3f(-500, -199.9, i - 10);
+		glVertex3f(-500, standardY+0.2, i + 10);
+		glVertex3f(500, standardY+0.2, i + 10);
+		glVertex3f(500, standardY+0.2, i - 10);
+		glVertex3f(-500, standardY+0.2, i - 10);
 		glEnd();
 	}
 	for (int i = -270; i < 280; i += 270) {
 		glBegin(GL_POLYGON);
-		glVertex3f(i - 10, -199.9, 500);
-		glVertex3f(i + 10, -199.9, 500);
-		glVertex3f(i + 10, -199.9, -500);
-		glVertex3f(i - 10, -199.9, -500);
+		glVertex3f(i - 10, standardY+0.2, 500);
+		glVertex3f(i + 10, standardY+0.2, 500);
+		glVertex3f(i + 10, standardY+0.2, -500);
+		glVertex3f(i - 10, standardY+0.2, -500);
 		glEnd();
 	}
 	glPopMatrix();
@@ -79,14 +85,14 @@ void Road()
 
 	for (int i = -270; i < 280; i += 270) {
 		glBegin(GL_LINES);
-		glVertex3f(-500, -199.8, i);
-		glVertex3f(500, -199.8, i);
+		glVertex3f(-500, standardY+0.3, i);
+		glVertex3f(500, standardY+0.3, i);
 		glEnd();
 	}
 	for (int i = -270; i < 280; i += 270) {
 		glBegin(GL_LINES);
-		glVertex3f(i, -199.8, -500);
-		glVertex3f(i, -199.8, 500);
+		glVertex3f(i, standardY+0.3, -500);
+		glVertex3f(i, standardY+0.3, 500);
 		glEnd();
 	}
 }
@@ -200,23 +206,328 @@ void block10()
 {
 	/*-----공원-----*/
 	//잔디
-	float green[] = { 0,1,0,1 };
-
+	float grass[] = { 0.1,1,0.1,1,1 };
+	float treeBody[] = { 0.3,0.2,0.2,1 };
+	float treeLeaf[] = { 0,0.2,0 ,1 };
+	float crane[] = { 0.8,0.8,0,1 };
+	float black[] = { 0.3,0.3,0.3,1 };
 
 	glPushMatrix();
-	glMaterialfv(GL_FRONT, GL_AMBIENT, green);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, green);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, green);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, grass);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, grass);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, grass);
 
 	glBegin(GL_POLYGON);
-
-	glVertex3f(-185, -199.7, 160);
-	glVertex3f(-65, -199.7, 160);
-	glVertex3f(-185, -199.7, 340);
-	glVertex3f(-65, -199.7, 340);
+	glVertex3f(-190, standardY + 0.1, 160);
+	glVertex3f(-70, standardY + 0.1, 160);
+	glVertex3f(-70, standardY + 0.1, 370);
+	glVertex3f(-190, standardY + 0.1, 370);
 	glEnd();
 	glPopMatrix();
 
+	//나무
+	for (int i = 0; i < 100; i += 10) {
+		glPushMatrix();
+
+		glMaterialfv(GL_FRONT, GL_AMBIENT, treeBody);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, treeBody);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, treeBody);
+
+		glTranslatef(-185, standardY, 162 + i);
+		glScalef(3, 30, 3);
+		glutSolidCube(1);
+		glPopMatrix();
+
+		glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_AMBIENT, treeLeaf);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, treeLeaf);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, treeLeaf);
+		glTranslatef(-185, standardY + 13, 162 + i);
+		glutSolidSphere(5, 10, 10);
+		glPopMatrix();
+	}
+	for (int i = 0; i < 100; i += 10) {
+		glPushMatrix();
+
+		glMaterialfv(GL_FRONT, GL_AMBIENT, treeBody);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, treeBody);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, treeBody);
+
+		glTranslatef(-75, standardY, 162 + i);
+		glScalef(3, 30, 3);
+		glutSolidCube(1);
+		glPopMatrix();
+
+		glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_AMBIENT, treeLeaf);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, treeLeaf);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, treeLeaf);
+		glTranslatef(-75, standardY + 13, 162 + i);
+		glutSolidSphere(5, 10, 10);
+		glPopMatrix();
+	}
+	for (int i = 0; i < 90; i += 9) {
+		glPushMatrix();
+
+		glMaterialfv(GL_FRONT, GL_AMBIENT, treeBody);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, treeBody);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, treeBody);
+
+		glTranslatef(-75, standardY, 285 + i);
+		glScalef(3, 30, 3);
+		glutSolidCube(1);
+		glPopMatrix();
+
+		glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_AMBIENT, treeLeaf);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, treeLeaf);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, treeLeaf);
+		glTranslatef(-75, standardY + 13, 285 + i);
+		glutSolidSphere(5, 10, 10);
+		glPopMatrix();
+	}
+	for (int i = 0; i < 90; i += 9) {
+		glPushMatrix();
+
+		glMaterialfv(GL_FRONT, GL_AMBIENT, treeBody);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, treeBody);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, treeBody);
+
+		glTranslatef(-185, standardY, 285 + i);
+		glScalef(3, 30, 3);
+		glutSolidCube(1);
+		glPopMatrix();
+
+		glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_AMBIENT, treeLeaf);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, treeLeaf);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, treeLeaf);
+		glTranslatef(-185, standardY + 13, 285 + i);
+		glutSolidSphere(5, 10, 10);
+		glPopMatrix();
+	}
+	for (int i = 0; i < 40; i += 8) {
+		glPushMatrix();
+
+		glMaterialfv(GL_FRONT, GL_AMBIENT, treeBody);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, treeBody);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, treeBody);
+
+		glTranslatef(-185 + i, standardY, 162);
+		glScalef(3, 30, 3);
+		glutSolidCube(1);
+		glPopMatrix();
+
+		glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_AMBIENT, treeLeaf);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, treeLeaf);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, treeLeaf);
+		glTranslatef(-185 + i, standardY + 13, 162);
+		glutSolidSphere(5, 10, 10);
+		glPopMatrix();
+	}
+	for (int i = 0; i > -40; i -= 8) {
+		glPushMatrix();
+
+		glMaterialfv(GL_FRONT, GL_AMBIENT, treeBody);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, treeBody);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, treeBody);
+
+		glTranslatef(-75 + i, standardY, 162);
+		glScalef(3, 30, 3);
+		glutSolidCube(1);
+		glPopMatrix();
+
+		glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_AMBIENT, treeLeaf);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, treeLeaf);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, treeLeaf);
+		glTranslatef(-75 + i, standardY + 13, 162);
+		glutSolidSphere(5, 10, 10);
+		glPopMatrix();
+	}
+	for (int i = 0; i > -40; i -= 8) {
+		glPushMatrix();
+
+		glMaterialfv(GL_FRONT, GL_AMBIENT, treeBody);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, treeBody);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, treeBody);
+
+		glTranslatef(-75 + i, standardY, 365);
+		glScalef(3, 30, 3);
+		glutSolidCube(1);
+		glPopMatrix();
+
+		glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_AMBIENT, treeLeaf);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, treeLeaf);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, treeLeaf);
+		glTranslatef(-75 + i, standardY + 13, 365);
+		glutSolidSphere(5, 10, 10);
+		glPopMatrix();
+	}
+	for (int i = 0; i < 40; i += 8) {
+		glPushMatrix();
+
+		glMaterialfv(GL_FRONT, GL_AMBIENT, treeBody);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, treeBody);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, treeBody);
+
+		glTranslatef(-185 + i, standardY, 365);
+		glScalef(3, 30, 3);
+		glutSolidCube(1);
+		glPopMatrix();
+
+		glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_AMBIENT, treeLeaf);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, treeLeaf);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, treeLeaf);
+		glTranslatef(-185 + i, standardY + 13, 365);
+		glutSolidSphere(5, 10, 10);
+		glPopMatrix();
+	}
+
+	//크레인
+	glPushMatrix();
+	glMaterialfv(GL_FRONT, GL_AMBIENT, crane);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, crane);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, crane);
+
+	glPushMatrix();
+	glPushMatrix();
+	glTranslatef(-220 - 10, standardY + 100, 70);
+	glScalef(10, 200, 10);
+	glutSolidCube(1);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-220 - 10, standardY + 180, 70);
+	glRotatef(craneMove, 0, 1, 0);
+	glPushMatrix();
+	glTranslatef(30 - 10, 0, 0);
+	glScalef(100, 7, 7);
+	glutSolidCube(1);
+	glPopMatrix();
+	glPopMatrix();
+	glPopMatrix();
+
+	glPushMatrix();
+	glPushMatrix();
+	glTranslatef(-70 + 10, standardY + 50, 80 + 10);
+	glScalef(10, 170, 10);
+	glutSolidCube(1);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-70 + 10, standardY + 120, 90);
+	glRotatef(craneMove, 0, 1, 0);
+	glPushMatrix();
+	glTranslatef(0, 0, 20);
+	glScalef(7, 7, 100);
+	glutSolidCube(1);
+	glPopMatrix();
+	glPopMatrix();
+	glPopMatrix();
+
+	glPopMatrix();
+
+	//펜스
+	float fence[] = { 0.8,0.8,0.8,1 };
+	glPushMatrix();
+	glMaterialfv(GL_FRONT, GL_AMBIENT, fence);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, fence);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, fence);
+
+	glBegin(GL_POLYGON);
+	glVertex3f(-250, standardY, 20);
+	glVertex3f(-250, standardY + 50, 20);
+	glVertex3f(-20, standardY + 50, 20);
+	glVertex3f(-20, standardY, 20);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex3f(-20, standardY, 20);
+	glVertex3f(-20, standardY + 50, 20);
+	glVertex3f(-20, standardY + 50, 130);
+	glVertex3f(-20, standardY, 130);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex3f(-20, standardY, 130);
+	glVertex3f(-20, standardY + 50, 130);
+	glVertex3f(-250, standardY + 50, 130);
+	glVertex3f(-250, standardY, 130);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex3f(-250, standardY, 130);
+	glVertex3f(-250, standardY + 50, 130);
+	glVertex3f(-250, standardY + 50, 20);
+	glVertex3f(-250, standardY, 20);
+	glEnd();
+	glPopMatrix();
+
+	//지어지고 있는 건물
+	float gray[] = { 0.6,0.6,0.6,1 };
+
+	glPushMatrix();
+	glMaterialfv(GL_FRONT, GL_AMBIENT, gray);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, gray);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, gray);
+
+	glPushMatrix();  //건물1
+
+	glTranslatef(-190, standardY + 50, 80);
+	glScalef(60, 80, 60);
+	glutSolidCube(1);
+	glPopMatrix();
+
+	glPushMatrix();
+	glMaterialfv(GL_FRONT, GL_AMBIENT, black);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, black);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, black);
+	for (int i = 0; i < 50; i += 10) {
+		glPushMatrix();
+		glTranslatef(-215 + i, standardY + 50, 60 );
+		glScalef(2, 100, 2);
+		glutSolidCube(1);
+		glPopMatrix();
+	}glPopMatrix();
+	for (int i = 0; i < 60; i += 12) {
+		glPushMatrix();
+		glTranslatef(-215 + i, standardY + 50, 60 + 10);
+		glScalef(2, 100, 2);
+		glutSolidCube(1);
+		glPopMatrix();
+
+		for (int i = 0; i < 60; i += 12) {
+			glPushMatrix();
+			glTranslatef(-216 + i, standardY + 50, 60 + 20);
+			glScalef(2, 100, 2);
+			glutSolidCube(1);
+			glPopMatrix();
+		}
+		for (int i = 0; i < 60; i += 12) {
+			glPushMatrix();
+			glTranslatef(-215 + i, standardY + 50, 60 + 30);
+			glScalef(2, 100, 2);
+			glutSolidCube(1);
+			glPopMatrix();
+		}
+		for (int i = 0; i < 60; i += 12) {
+			glPushMatrix();
+			glTranslatef(-215 + i, standardY + 50, 60 + 40);
+			glScalef(2, 100, 2);
+			glutSolidCube(1);
+			glPopMatrix();
+		}
+
+		glPushMatrix();
+		glTranslatef(-100, standardY + 30, 90);
+		glScalef(60, 80, 60);
+		glutSolidCube(1);
+		glPopMatrix();
+
+		glPopMatrix();
+
+	}
 }
 void main(int argc, char** argv) // 윈도우 출력하고 출력함수 설정  
 {
@@ -318,16 +629,16 @@ void Keyboard(unsigned char key, int x, int y)
 	case 'z':
 		rotateZ += 10;
 		break;
-	case 'w':
+	case 's':
 		moveU += 10;
 		break;
-	case 's':
+	case 'w':
 		moveD -= 10;
 		break;
-	case'd':
+	case'a':
 		moveR += 10;
 		break;
-	case'a':
+	case'd':
 		moveL -= 10;
 		break;
 	case'+':
@@ -352,6 +663,9 @@ void Keyboard(unsigned char key, int x, int y)
 	case'q':	//프로그램 종료
 		glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 		glutLeaveMainLoop();
+		break;
+	case'l':
+		craneMove++;
 		break;
 	}
 
