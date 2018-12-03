@@ -1,8 +1,12 @@
 #include<gl/freeglut.h>
+#include<stdio.h>
 
 void DrawScene();
 void Reshape(int, int);
 void Keyboard(unsigned char, int, int);
+
+GLubyte * LoadDIBitmap(const char *filename, BITMAPINFO **info);
+void setTexture(int);
 
 //좌표변수
 float rotateX, rotateY, rotateZ = 0;
@@ -11,11 +15,16 @@ float standardY = -200;
 
 GLUquadricObj *p = gluNewQuadric();
 
+GLuint textureObject[3];
+GLubyte *pBytes;
+BITMAPINFO *info;
+
 //일반변수
 int craneMove;
 
 //객체함수
 
+//조명
 void initLight()
 {
 	GLfloat ambientLight[] = { 0.6,0.6,0.6,1.0 };
@@ -30,6 +39,53 @@ void initLight()
 
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHTING);
+}
+
+//텍스처 기본
+GLubyte * LoadDIBitmap(const char *filename, BITMAPINFO **info)
+{
+	FILE *fp;
+	GLubyte *bits;
+	int bitsize, infosize;
+	BITMAPFILEHEADER header;
+
+	if ((fp = fopen(filename, "rb")) == NULL)
+		return NULL;
+	if (fread(&header, sizeof(BITMAPFILEHEADER), 1, fp) < 1) {
+		fclose(fp);
+		return NULL;
+	}
+	if (header.bfType != 'MB') {
+		fclose(fp);
+		return NULL;
+	}
+	infosize = header.bfOffBits - sizeof(BITMAPFILEHEADER);
+
+	if ((*info = (BITMAPINFO*)malloc(infosize)) == NULL) {
+		fclose(fp);
+		exit(0);
+		return NULL;
+	}
+	if (fread(*info, 1, infosize, fp) < (unsigned int)infosize) {
+		free(*info);
+		fclose(fp);
+		return NULL;
+	}
+	if ((bitsize = (*info)->bmiHeader.biSizeImage) == 0)
+		bitsize = ((*info)->bmiHeader.biWidth*(*info)->bmiHeader.biBitCount + 7) / 8.0*abs((*info)->bmiHeader.biHeight);
+	if ((bits = (unsigned char *)malloc(bitsize)) == NULL) {
+		free(*info);
+		fclose(fp);
+		return NULL;
+	}
+	if (fread(bits, 1, bitsize, fp) < (unsigned int)bitsize) {
+		free(*info);
+		free(bits);
+		fclose(fp);
+		return NULL;
+	}
+	fclose(fp);
+	return bits;
 }
 
 void BaseGround()
