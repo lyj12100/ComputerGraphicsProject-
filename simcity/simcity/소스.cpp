@@ -113,14 +113,55 @@ void block11()
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, red);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, white);
 
-	glPushMatrix();
-	glTranslatef(80, -50, 80);
-	glScalef(100, 300, 100);
+	//glPushMatrix();
+	//glTranslatef(80, -50, 80);
+	//glScalef(100, 300, 100);
 
-	glutSolidCube(1);
-	glPopMatrix();
+	//glutSolidCube(1);
+	//glPopMatrix();
 
 	glPushMatrix();
+	//glBindTexture(GL_TEXTURE_2D, textureObject[0]);
+	glBegin(GL_QUADS);
+	//glNormal3f(1, 0, 0);
+	//glTexCoord2f(0, 0);
+	glVertex3f(30, standardY, 30);
+	//glTexCoord2f(0, 1);
+	glVertex3f(30, standardY + 300, 30);
+	//glTexCoord2f(1, 1);
+	glVertex3f(130, standardY + 300, 30);
+	//glTexCoord2f(1, 0);
+	glVertex3f(130, standardY, 30);
+
+	//glTexCoord2f(0, 0);
+	glVertex3f(130, standardY, 30);
+	//glTexCoord2f(0, 1);
+	glVertex3f(130, standardY + 300, 30);
+	//glTexCoord2f(1, 1);
+	glVertex3f(130, standardY + 300, 130);
+	//glTexCoord2f(1, 0);
+	glVertex3f(130, standardY, 130);
+
+	//glTexCoord2f(0, 0);
+	glVertex3f(130, standardY, 130);
+	//glTexCoord2f(0, 1);
+	glVertex3f(130, standardY + 300, 130);
+	//glTexCoord2f(1, 1);
+	glVertex3f(30, standardY + 300, 130);
+	//glTexCoord2f(1, 0);
+	glVertex3f(30, standardY, 130);
+
+	//glTexCoord2f(0, 0);
+	glVertex3f(30, standardY, 130);
+	//glTexCoord2f(0, 1);
+	glVertex3f(30, standardY + 300, 130);
+	//glTexCoord2f(1, 1);
+	glVertex3f(30, standardY + 300, 30);
+	//glTexCoord2f(1, 0);
+	glVertex3f(30, standardY, 30);
+
+	glEnd();
+
 	glBegin(GL_QUAD_STRIP);
 	//glNormal3f(0, 1, 0);
 	glVertex3f(30, 100, 30);
