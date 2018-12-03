@@ -88,6 +88,38 @@ GLubyte * LoadDIBitmap(const char *filename, BITMAPINFO **info)
 	return bits;
 }
 
+void setTexture(int n)
+{
+	//n개의 이미지 텍스쳐 매핑을 한다.
+	glGenTextures(n, textureObject);
+	//텍스처와 객체를 결합한다 -- (1)
+	glBindTexture(GL_TEXTURE_2D, textureObject[0]);
+	//이미지 로딩을 한다 -- (2)
+	pBytes = LoadDIBitmap("skyscrapper1.bmp", &info);
+	//텍스처 설정 정의 -- (3)
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, info->bmiHeader.biWidth, info->bmiHeader.biHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+	//glTexImage2D(GL_TEXTURE_2D, 0, 4, 600, 700, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+	//텍스처 파라미터 설정 -- (4)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	//텍스처모드 설정
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+	//나머지 n-1개의 텍스처에도 (1)~(4) 까지의 과정을 진행하여 텍스처를 설정
+	glBindTexture(GL_TEXTURE_2D, textureObject[1]);
+	pBytes = LoadDIBitmap("park.bmp", &info);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, info->bmiHeader.biWidth, info->bmiHeader.biHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+
+}
+
 void BaseGround()
 {
 	float gray[] = { 0.3,0.3,0.3,1.0 };
@@ -310,16 +342,22 @@ void block10()
 	float black[] = { 0.3,0.3,0.3,1 };
 
 	glPushMatrix();
-	glMaterialfv(GL_FRONT, GL_AMBIENT, grass);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, grass);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, grass);
-
-	glBegin(GL_POLYGON);
+	glEnable(GL_TEXTURE_2D);
+	//glMaterialfv(GL_FRONT, GL_AMBIENT, grass);
+	//glMaterialfv(GL_FRONT, GL_DIFFUSE, grass);
+	//glMaterialfv(GL_FRONT, GL_SPECULAR, grass);
+	glBindTexture(GL_TEXTURE_2D, textureObject[1]);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 1);
 	glVertex3f(-190, standardY + 0.1, 160);
+	glTexCoord2f(1, 1);
 	glVertex3f(-70, standardY + 0.1, 160);
+	glTexCoord2f(1, 0);
 	glVertex3f(-70, standardY + 0.1, 370);
+	glTexCoord2f(0, 0);
 	glVertex3f(-190, standardY + 0.1, 370);
 	glEnd();
+	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 
 	//나무
@@ -736,7 +774,11 @@ void DrawScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 
+	//glEnable(GL_TEXTURE_2D);
 	initLight();
+
+	setTexture(2);
+
 
 	glLoadIdentity();
 
@@ -777,10 +819,14 @@ void DrawScene()
 
 	block11();
 
+	//glPushMatrix();
+
 	block10();
+
+	//glPopMatrix();
 	block14();
 
-
+	//glDisable(GL_TEXTURE_2D);
 	glutSwapBuffers();
 }
 
