@@ -60,18 +60,18 @@ void Road()
 
 	for (int i = -270; i < 280; i += 270) {
 		glBegin(GL_POLYGON);
-		glVertex3f(-500, standardY+0.2, i + 10);
-		glVertex3f(500, standardY+0.2, i + 10);
-		glVertex3f(500, standardY+0.2, i - 10);
-		glVertex3f(-500, standardY+0.2, i - 10);
+		glVertex3f(-500, standardY + 0.2, i + 10);
+		glVertex3f(500, standardY + 0.2, i + 10);
+		glVertex3f(500, standardY + 0.2, i - 10);
+		glVertex3f(-500, standardY + 0.2, i - 10);
 		glEnd();
 	}
 	for (int i = -270; i < 280; i += 270) {
 		glBegin(GL_POLYGON);
-		glVertex3f(i - 10, standardY+0.2, 500);
-		glVertex3f(i + 10, standardY+0.2, 500);
-		glVertex3f(i + 10, standardY+0.2, -500);
-		glVertex3f(i - 10, standardY+0.2, -500);
+		glVertex3f(i - 10, standardY + 0.2, 500);
+		glVertex3f(i + 10, standardY + 0.2, 500);
+		glVertex3f(i + 10, standardY + 0.2, -500);
+		glVertex3f(i - 10, standardY + 0.2, -500);
 		glEnd();
 	}
 	glPopMatrix();
@@ -85,14 +85,14 @@ void Road()
 
 	for (int i = -270; i < 280; i += 270) {
 		glBegin(GL_LINES);
-		glVertex3f(-500, standardY+0.3, i);
-		glVertex3f(500, standardY+0.3, i);
+		glVertex3f(-500, standardY + 0.3, i);
+		glVertex3f(500, standardY + 0.3, i);
 		glEnd();
 	}
 	for (int i = -270; i < 280; i += 270) {
 		glBegin(GL_LINES);
-		glVertex3f(i, standardY+0.3, -500);
-		glVertex3f(i, standardY+0.3, 500);
+		glVertex3f(i, standardY + 0.3, -500);
+		glVertex3f(i, standardY + 0.3, 500);
 		glEnd();
 	}
 }
@@ -485,7 +485,7 @@ void block10()
 	glMaterialfv(GL_FRONT, GL_SPECULAR, black);
 	for (int i = 0; i < 50; i += 10) {
 		glPushMatrix();
-		glTranslatef(-215 + i, standardY + 50, 60 );
+		glTranslatef(-215 + i, standardY + 50, 60);
 		glScalef(2, 100, 2);
 		glutSolidCube(1);
 		glPopMatrix();
@@ -525,10 +525,98 @@ void block10()
 		glutSolidCube(1);
 		glPopMatrix();
 
+		//육교
+		float bridge[] = { 0.8,0.8,0.4,1 };
+		glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_AMBIENT, bridge);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, bridge);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, bridge);
+		glTranslatef(-130, standardY + 1, 270);
+		glScalef(3, 0.7, 3);
+		glRotatef(90, 0, 1, 0);
+		glutSolidTorus(3, 11, 10, 10);
 		glPopMatrix();
+
+		//주유소
+		glPopMatrix();
+
+		glPushMatrix();
+		glTranslatef(-230, standardY + 13, 190);
+		glScalef(30, 6, 60);
+		glutSolidCube(1);
+		glPopMatrix();
+		for (int i = 0; i < 21; i += 20) {
+			glPushMatrix();
+			glTranslatef(-240 + i, standardY + 5, 170);
+			glScalef(4, 10, 4);
+			glutSolidCube(1);
+			glPopMatrix();
+		}
+		for (int i = 0; i < 21; i += 20) {
+			glPushMatrix();
+			glTranslatef(-240 + i, standardY + 5, 210);
+			glScalef(4, 10, 4);
+			glutSolidCube(1);
+			glPopMatrix();
+		}
+		//glPushMatrix();
+		glPushMatrix();
+		glTranslatef(-230, standardY + 10, 235);
+		glScalef(40, 30, 20);
+		glutSolidCube(1);
+		glPopMatrix();
+
+		//glPopMatrix();
 
 	}
 }
+
+void block14()
+{
+	//구멍난 건물(좌)
+	glPushMatrix();
+	glTranslatef(-225, standardY + 15, 295);
+	glScalef(35, 40, 15);
+	glutSolidCube(1);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(-225, standardY + 15, 370);
+	glScalef(35, 40, 15);
+	glutSolidCube(1);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(-210, standardY + 15, 333);
+	glScalef(15, 40, 90);
+	glutSolidCube(1);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(-240, standardY + 15, 333);
+	glScalef(15, 40, 90);
+	glutSolidCube(1);
+	glPopMatrix();
+	//구멍난 건물(우)
+	glPushMatrix();
+	glTranslatef(-40, standardY + 15, 295);
+	glScalef(35, 40, 15);
+	glutSolidCube(1);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(-40, standardY + 15, 370);
+	glScalef(35, 40, 15);
+	glutSolidCube(1);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(-25, standardY + 15, 333);
+	glScalef(15, 40, 90);
+	glutSolidCube(1);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(-55, standardY + 15, 333);
+	glScalef(15, 40, 90);
+	glutSolidCube(1);
+	glPopMatrix();
+}
+
 void main(int argc, char** argv) // 윈도우 출력하고 출력함수 설정  
 {
 	glutInit(&argc, argv); // glut 초기화  
@@ -593,6 +681,7 @@ void DrawScene()
 	block11();
 
 	block10();
+	block14();
 
 
 	glutSwapBuffers();
